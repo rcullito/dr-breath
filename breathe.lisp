@@ -31,7 +31,15 @@
       (let ((beginning-of-right-column (+ backwards-search-position adjustment)))
         (subseq txt beginning-of-right-column)))))
 
-(defun process-page-heading (text)
+(defun flush-output-streams-to-file (output-stream)
+;;  (write-line "toast-left" *left-stream*)
+  (write-line (get-output-stream-string *left-stream*) output-stream)
+;;  (write-line "toast-right" *right-stream*)
+  (write-line (get-output-stream-string *right-stream*) output-stream))
+
+(defun process-page-heading (text output-stream)
+  ;; TODO we will also have to do this for chapter title pages
+  (flush-output-streams-to-file output-stream)
   (write-line "Dr. Breath" *left-stream*)
   (write-line (right-column text *delimeter*) *right-stream*))
 
@@ -43,11 +51,11 @@
     (when right-part
       (write-line right-part *right-stream*))))
 
-(defun line->text-streams (text)
+(defun line->text-streams (text output-stream)
   (cond
-    ((zerop (length text)))
+    ((zerop (length text)) (flush-output-streams-to-file output-stream))
     ((line-num-p text) (process-line-num text))
-    ((page-heading-p text) (process-page-heading text))
+    ((page-heading-p text) (process-page-heading text output-stream))
     (t (process-prose-line text))))
 
 (defun transcribe (input-file output-file)
@@ -57,12 +65,13 @@
         for current-line = (read-line input-stream nil 'eof) ;; sets eof-error-p to nil and eof-value to 'eof
         until (eq current-line 'eof)
         do
-           (line->text-streams current-line))
-      (progn
-        (write-line (get-output-stream-string *left-stream*) output-stream)
-        (write-line (get-output-stream-string *right-stream*) output-stream)))))
+           (line->text-streams current-line output-stream)))))
 
 (transcribe "sample2.txt" "built.txt")
+
+
+
+
 
 
 
