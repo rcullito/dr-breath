@@ -15,34 +15,25 @@
       (let ((beginning-of-right-column (+ backwards-search-position adjustment)))
         (subseq txt beginning-of-right-column)))))
 
-(defun output-to-stream (text stream-1 stream-2)
+(defun line->text-streams (text)
   (let* ((left-part (left-column text *delimeter*))
          (right-part (right-column text *delimeter*)))
     (when (not (equal "" left-part))
-      (write-line left-part stream-1))
+      (write-line left-part *left-stream*))
     (when right-part
-      (write-line right-part stream-2))))
+      (write-line right-part *right-stream*))))
 
 (defun transcribe (input-file output-file)
   (with-open-file (output-stream output-file :direction :output)
-    (with-open-file (my-stream input-file :direction :input)
+    (with-open-file (input-stream input-file :direction :input)
       (loop
-        for current-line = (read-line my-stream nil 'eof) ;; sets eof-error-p to nil and eof-value to 'eof
+        for current-line = (read-line input-stream nil 'eof) ;; sets eof-error-p to nil and eof-value to 'eof
         until (eq current-line 'eof)
         do
-           (output-to-stream current-line *left-stream* *right-stream*))
+           (line->text-streams current-line))
       (progn
         (write-line (get-output-stream-string *left-stream*) output-stream)
         (write-line (get-output-stream-string *right-stream*) output-stream)))))
 
 ;; (transcribe "sample.txt" "built.txt")
-
-
-
-
-
-
-
-
-
 
