@@ -18,4 +18,5 @@
      (when current-line
        (let* ((first-line (left-column current-line *delimeter*))
               (second-line (right-column current-line *delimeter*)))
-         (print second-line))))))
+         (when second-line
+           (print second-line)))))))
