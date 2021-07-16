@@ -1,4 +1,6 @@
 (defparameter *delimeter* "    ")
+(defparameter *left-stream* (make-string-output-stream))
+(defparameter *right-stream* (make-string-output-stream))
 
 (defun left-column (txt delim)
   (let ((end-of-left-column (search delim txt)))
@@ -13,9 +15,6 @@
       (let ((beginning-of-right-column (+ backwards-search-position adjustment)))
         (subseq txt beginning-of-right-column)))))
 
-(defparameter *left-stream* (make-string-output-stream))
-(defparameter *right-stream* (make-string-output-stream))
-
 
 (with-open-file (my-stream "sample.txt" :direction :input)
   (loop
@@ -27,10 +26,7 @@
          ;; we can't alternate per line, we need to send each to a different stream and then join
          ;; those at the end of a page
          (when (not (equal "" left-part))
-           (print left-part *left-stream*))
+           (write-line left-part *left-stream*))
          (when right-part
-           (print right-part *right-stream*)))))
+           (write-line right-part *right-stream*)))))
 
-
-
-(get-output-stream-string *left-stream*)
