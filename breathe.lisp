@@ -23,10 +23,12 @@
     do
        (let* ((left-part (left-column current-line *delimeter*))
               (right-part (right-column current-line *delimeter*)))
-         ;; we can't alternate per line, we need to send each to a different stream and then join
-         ;; those at the end of a page
          (when (not (equal "" left-part))
            (write-line left-part *left-stream*))
          (when right-part
            (write-line right-part *right-stream*)))))
 
+
+;; (progn 
+;;   (get-output-stream-string *left-stream*)
+;;   (get-output-stream-string *right-stream*))
