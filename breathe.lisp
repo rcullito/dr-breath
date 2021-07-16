@@ -67,7 +67,8 @@
         do
            (line->text-streams current-line output-stream)))))
 
-(transcribe "sample2.txt" "built.txt")
+;; (transcribe "sample2.txt" "built.txt")
+
 
 
 
