@@ -33,8 +33,11 @@
 (defun process-page-heading (text output-stream)
   ;; TODO we will also have to do this for chapter title pages
   (flush-output-streams-to-file output-stream)
-  (write-line "Dr. Breath" *left-stream*)
-  (write-line (right-column text *delimeter*) *right-stream*))
+  (cons "Dr. Breath" (right-column text *delimeter*)))
+
+(defun strings->text-streams (cell)
+  (write-line (car cell) *left-stream*)
+  (write-line (cdr cell) *right-stream*))
 
 (defun process-prose-line (text)
   (let* ((left-part (left-column text *delimeter*))
@@ -48,7 +51,7 @@
   (cond
     ((zerop (length text)) (flush-output-streams-to-file output-stream))
     ((line-num-p text) (process-line-num text))
-    ((page-heading-p text) (process-page-heading text output-stream))
+    ((page-heading-p text) (strings->text-streams (process-page-heading text output-stream)))
     (t (process-prose-line text))))
 
 (defun transcribe (input-file output-file)
