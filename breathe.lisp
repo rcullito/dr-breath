@@ -30,9 +30,7 @@
 ;;  (write-line "toast-right" *right-stream*)
   (write-line (get-output-stream-string *right-stream*) output-stream))
 
-(defun process-page-heading (text output-stream)
-  ;; TODO we will also have to do this for chapter title pages
-  (flush-output-streams-to-file output-stream)
+(defun process-page-heading (text)
   (cons "Dr. Breath" (right-column text *delimeter*)))
 
 (defun strings->text-streams (cell)
@@ -51,7 +49,7 @@
   (cond
     ((zerop (length text)) (flush-output-streams-to-file output-stream))
     ((line-num-p text) (process-line-num text))
-    ((page-heading-p text) (strings->text-streams (process-page-heading text output-stream)))
+    ((page-heading-p text) (strings->text-streams (process-page-heading text)))
     (t (process-prose-line text))))
 
 (defun transcribe (input-file output-file)
@@ -66,54 +64,20 @@
 ;; (transcribe "sample2.txt" "built.txt")
 
 
+;; (search "platypus" *example-chapter-heading*)
+;; (parse-integer "sure" :junk-allowed t)
+;; (left-column *page-example-1* *delimeter*)
+;; (right-column *page-example-1* *delimeter*)
+;; (if (some #'digit-char-p (first-half *page-example-2*))
+;;     (string-trim '(#\Space) *page-example-2*)
+;;     "")
 
-
-
-
-
-
-
-*example-chapter-heading*
-
-
-
-
-
-(search "platypus" *example-chapter-heading*)
-
-
-(parse-integer "sure" :junk-allowed t)
-
-
-
-
-
-
-(left-column *page-example-1* *delimeter*)
-(right-column *page-example-1* *delimeter*)
-
-
-
-
-(if (some #'digit-char-p (first-half *page-example-2*))
-    (string-trim '(#\Space) *page-example-2*)
-    "")
-
-
-
-
-(some #'digit-char-p (subseq *page-example-2* 0 65))
-
-(left-column *page-example-2* *delimeter*)
-(right-column *page-example-2* *delimeter*)
-
-(some #'digit-char-p *page-example-1*)
-
-(some #'digit-char-p *page-example-2*)
-
-(some #'digit-char-p *example-chapter-heading*)
-
-
-(defparameter *vexing-line* "  ti                                           ' a mg comp 1-")
-(length *vexing-line*)
-(line-num-p *vexing-line*)
+;; (some #'digit-char-p (subseq *page-example-2* 0 65))
+;; (left-column *page-example-2* *delimeter*)
+;; (right-column *page-example-2* *delimeter*)
+;; (some #'digit-char-p *page-example-1*)
+;; (some #'digit-char-p *page-example-2*)
+;; (some #'digit-char-p *example-chapter-heading*)
+;; (defparameter *vexing-line* "  ti                                           ' a mg comp 1-")
+;; (length *vexing-line*)
+;; (line-num-p *vexing-line*)

@@ -4,22 +4,15 @@
 (defparameter *page-example-2* "                                                                                   33")
 (defparameter *example-page-heading* "       Dr. Breath                                                          What   Is It?")
 
-
-
-
-(defun chapter-heading-right-column ()
-  (equal "What   Is It?"
-         (right-column *example-page-heading* *delimeter*)))
-
-(defun chapter-heading-left-column ()
-  (left-column *example-page-heading* *delimeter*))
+(defun page-heading-test ()
+  (equal (process-page-heading *example-page-heading*)
+         '("Dr. Breath" . "What   Is It?")))
 
 (every (lambda (x) (funcall x))
-       '(chapter-heading-left-column
-         chapter-heading-right-column))
+       '(page-heading-test))
 
-(search *delimeter* *example-page-heading*)
+;; (search *delimeter* *example-page-heading*)
 
-;; process page heading needs to return a cons cell of left and right, that
-;; another function writes to the stream
-(cdr (cons "Dr. Breath" "hi"))
+;; ;; process page heading needs to return a cons cell of left and right, that
+;; ;; another function writes to the stream
+;; (cdr (cons "Dr. Breath" "hi"))
