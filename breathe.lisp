@@ -4,12 +4,6 @@
 (defparameter *left-stream* (make-string-output-stream))
 (defparameter *right-stream* (make-string-output-stream))
 
-(defun process-line-num (text)
-  (when (> (length text) 65)
-      (let ((first-half (first-half text)))
-     (when (some #'digit-char-p first-half)
-       (write-line (string-trim '(#\Space) first-half) *left-stream*)))
-      (write-line (right-column text *delimeter*) *right-stream*)))
 
 (defun left-column (txt delim)
   (let ((end-of-left-column (search delim txt)))
@@ -23,6 +17,12 @@
     (when backwards-search-position
       (let ((beginning-of-right-column (+ backwards-search-position adjustment)))
         (subseq txt beginning-of-right-column)))))
+
+
+(defun process-page-number (text)
+  (cons (when (> (length text) 65)
+          (string-trim '(#\Space) (first-half text)))
+        (right-column text *delimeter*)))
 
 (defun flush-output-streams-to-file (output-stream)
 ;;  (write-line "toast-left" *left-stream*)
@@ -38,19 +38,15 @@
   (write-line (cdr cell) *right-stream*))
 
 (defun process-prose-line (text)
-  (let* ((left-part (left-column text *delimeter*))
-         (right-part (right-column text *delimeter*)))
-    (when (not (equal "" left-part))
-      (write-line left-part *left-stream*))
-    (when right-part
-      (write-line right-part *right-stream*))))
+  (cons (left-column text *delimeter*)
+        (right-column text *delimeter*)))
 
 (defun line->text-streams (text output-stream)
   (cond
     ((zerop (length text)) (flush-output-streams-to-file output-stream))
-    ((line-num-p text) (process-line-num text))
+    ((line-num-p text) (strings->text-streams (process-page-number text)))
     ((page-heading-p text) (strings->text-streams (process-page-heading text)))
-    (t (process-prose-line text))))
+    (t (strings->text-streams (process-prose-line text)))))
 
 (defun transcribe (input-file output-file)
   (with-open-file (output-stream output-file :direction :output)
