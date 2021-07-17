@@ -4,6 +4,7 @@
 (defparameter *left-stream* (make-string-output-stream))
 (defparameter *right-stream* (make-string-output-stream))
 
+;; columns
 
 (defun left-column (txt delim)
   (let ((end-of-left-column (search delim txt)))
@@ -18,28 +19,32 @@
       (let ((beginning-of-right-column (+ backwards-search-position adjustment)))
         (subseq txt beginning-of-right-column)))))
 
+;; processors
+
+(defun process-page-heading (text)
+  (cons "Dr. Breath" (right-column text *delimeter*)))
 
 (defun process-page-number (text)
   (cons (when (> (length text) 65)
           (string-trim '(#\Space) (first-half text)))
         (right-column text *delimeter*)))
 
-(defun flush-output-streams-to-file (output-stream)
-;;  (write-line "toast-left" *left-stream*)
-  (write-line (get-output-stream-string *left-stream*) output-stream)
-;;  (write-line "toast-right" *right-stream*)
-  (write-line (get-output-stream-string *right-stream*) output-stream))
+(defun process-prose-line (text)
+  (cons (left-column text *delimeter*)
+        (right-column text *delimeter*)))
 
-(defun process-page-heading (text)
-  (cons "Dr. Breath" (right-column text *delimeter*)))
+;; io
 
 (defun strings->text-streams (cell)
   (write-line (car cell) *left-stream*)
   (write-line (cdr cell) *right-stream*))
 
-(defun process-prose-line (text)
-  (cons (left-column text *delimeter*)
-        (right-column text *delimeter*)))
+(defun flush-output-streams-to-file (output-stream)
+  (write-line (get-output-stream-string *left-stream*) output-stream)
+  (write-line (get-output-stream-string *right-stream*) output-stream))
+
+
+;; workhorses
 
 (defun line->text-streams (text output-stream)
   (cond
@@ -58,22 +63,3 @@
            (line->text-streams current-line output-stream)))))
 
 ;; (transcribe "sample2.txt" "built.txt")
-
-
-;; (search "platypus" *example-chapter-heading*)
-;; (parse-integer "sure" :junk-allowed t)
-;; (left-column *page-example-1* *delimeter*)
-;; (right-column *page-example-1* *delimeter*)
-;; (if (some #'digit-char-p (first-half *page-example-2*))
-;;     (string-trim '(#\Space) *page-example-2*)
-;;     "")
-
-;; (some #'digit-char-p (subseq *page-example-2* 0 65))
-;; (left-column *page-example-2* *delimeter*)
-;; (right-column *page-example-2* *delimeter*)
-;; (some #'digit-char-p *page-example-1*)
-;; (some #'digit-char-p *page-example-2*)
-;; (some #'digit-char-p *example-chapter-heading*)
-;; (defparameter *vexing-line* "  ti                                           ' a mg comp 1-")
-;; (length *vexing-line*)
-;; (line-num-p *vexing-line*)
