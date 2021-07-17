@@ -54,12 +54,12 @@
     (t (strings->text-streams (process-prose-line text)))))
 
 (defun transcribe (input-file output-file)
-  (with-open-file (output-stream output-file :direction :output)
-    (with-open-file (input-stream input-file :direction :input)
-      (loop
-        for current-line = (read-line input-stream nil 'eof) ;; sets eof-error-p to nil and eof-value to 'eof
-        until (eq current-line 'eof)
-        do
-           (line->text-streams current-line output-stream)))))
+  (file->file input-file output-file
+    (loop
+      ;; set eof-error-p to nil and eof-value to 'eof
+      for current-line = (read-line input-stream nil 'eof) 
+      until (eq current-line 'eof)
+      do
+         (line->text-streams current-line output-stream))))
 
 ;; (transcribe "sample2.txt" "built.txt")
