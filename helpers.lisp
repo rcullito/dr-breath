@@ -9,6 +9,6 @@
 
 
 (defmacro file->file (input-file output-file &body body)
-  `(with-open-file (output-stream ,output-file :direction :output)
+  `(with-open-file (output-stream ,output-file :direction :output :if-exists :supersede)
     (with-open-file (input-stream ,input-file :direction :input)
       ,@body)))
