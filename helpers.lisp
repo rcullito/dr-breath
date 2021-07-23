@@ -7,6 +7,8 @@
 (defun first-half (text)
   (subseq text 0 65))
 
+(defun false-start-p (text delim)
+  (equal delim (subseq text 0 (length delim))))
 
 (defmacro file->file (input-file output-file &body body)
   `(with-open-file (output-stream ,output-file :direction :output :if-exists :supersede)
