@@ -5,11 +5,10 @@
 (defparameter *right-stream* (make-string-output-stream))
 
 (defun left-column (txt delim)
-  (unless (false-start-p txt delim)
-    (let ((end-of-left-column (search delim txt)))
-      ;; we can't do a when here because there will be some valid
-      ;; lines in the corpus that will not have a gap
-      (subseq txt 0 end-of-left-column))))
+  (let ((end-of-left-column (search delim txt)))
+    ;; we can't do a when here because there will be some valid
+    ;; lines in the corpus that will not have a gap
+    (subseq txt 0 end-of-left-column)))
 
 (defun right-column (txt delim)
   (let ((adjustment (length delim))
@@ -29,8 +28,10 @@
         (right-column text *delimeter*)))
 
 (defun process-prose-line (text)
-  (cons (left-column text *delimeter*)
-        (right-column text *delimeter*)))
+  (if (or (false-start-p text *delimeter*) (< (length text) 65))
+      (cons (subseq text 0 (min (length text) 65)) nil)
+      (cons (left-column text *delimeter*)
+            (right-column text *delimeter*))))
 
 ;; io
 
@@ -63,4 +64,6 @@
       do
          (line->text-streams current-line output-stream))))
 
+
+;; TODO if page number is even, flush left, if odd, flush right. that is the key to it all!
 ;; (transcribe "Chapter5.txt" "built.txt")
