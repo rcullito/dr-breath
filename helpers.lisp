@@ -1,3 +1,5 @@
+(defparameter *line-cutoff* 65)
+
 (defun page-heading-p (txt)
   (search "  Dr. Breath  " txt))
 
@@ -5,7 +7,12 @@
   (some #'digit-char-p text))
 
 (defun first-half (text)
-  (subseq text 0 65))
+  (subseq text 0 *line-cutoff*))
+
+(defun short-line-p (text)
+  (< (length text) *line-cutoff*))
+
+(defvar long-line-p (complement #'short-line-p))
 
 (defun false-start-p (text delim)
   (equal delim (subseq text 0 (length delim))))

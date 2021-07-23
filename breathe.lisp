@@ -23,7 +23,7 @@
   (cons "Dr. Breath" (right-column text *delimeter*)))
 
 (defun process-page-number (text)
-  (cons (when (> (length text) 65)
+  (cons (when (funcall long-line-p text)
           (string-trim '(#\Space) (first-half text)))
         (right-column text *delimeter*)))
 
