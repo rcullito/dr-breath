@@ -3,12 +3,11 @@
 (defun page-heading-p (txt)
   (search "  Dr. Breath  " txt))
 
-(defun line-num-p (text)
-  (some #'digit-char-p text))
-
 (defun trim-space (text)
   (string-trim '(#\Space) text))
 
+(defun line-num-p (text)
+  (every #'digit-char-p (trim-space text)))
 
 (defun make-page-predicate (odd-or-even)
   (lambda (text)
@@ -33,3 +32,5 @@
   `(with-open-file (output-stream ,output-file :direction :output :if-exists :supersede)
     (with-open-file (input-stream ,input-file :direction :input)
       ,@body)))
+
+
