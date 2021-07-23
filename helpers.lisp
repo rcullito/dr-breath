@@ -6,6 +6,18 @@
 (defun line-num-p (text)
   (some #'digit-char-p text))
 
+(defun trim-space (text)
+  (string-trim '(#\Space) text))
+
+
+(defun make-page-predicate (odd-or-even)
+  (lambda (text)
+    (let ((page-integer (parse-integer (trim-space text))))
+      (and (funcall odd-or-even page-integer) (> page-integer 10)))))
+
+(defvar odd-page-num-p (make-page-predicate #'oddp))
+(defvar even-page-num-p (make-page-predicate #'evenp))
+
 (defun first-half (text)
   (subseq text 0 *line-cutoff*))
 
