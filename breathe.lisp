@@ -36,7 +36,8 @@
 ;; io
 
 (defun strings->text-streams (cell)
-  (write-line (car cell) *left-stream*)
+  (when (car cell)
+      (write-line (car cell) *left-stream*))
   (when (cdr cell)
       (write-line (cdr cell) *right-stream*)))
 

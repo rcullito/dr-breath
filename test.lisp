@@ -30,13 +30,10 @@
 (defun all-tests-pass (tests)
   (every (lambda (x) (funcall x)) tests))
 
-;; TODO
-;; handle blank lines in a similar fashion
-
-(all-tests-pass
- '(page-heading-test
-   page-number-test-1
-   page-number-test-2
-   prose-line-test-1
-   prose-line-test-2))
+;; (all-tests-pass
+;;  '(page-heading-test
+;;    page-number-test-1
+;;    page-number-test-2
+;;    prose-line-test-1
+;;    prose-line-test-2))
 
