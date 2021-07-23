@@ -1,6 +1,6 @@
 (load "helpers.lisp")
 
-(defparameter *delimeter* "    ")
+(defparameter *delimeter* "      ")
 (defparameter *left-stream* (make-string-output-stream))
 (defparameter *right-stream* (make-string-output-stream))
 
@@ -64,4 +64,4 @@
       do
          (line->text-streams current-line output-stream))))
 
-;; (transcribe "sample2.txt" "built.txt")
+;; (transcribe "Chapter5.txt" "built.txt")
