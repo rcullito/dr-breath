@@ -37,7 +37,8 @@
 
 (defun strings->text-streams (cell)
   (write-line (car cell) *left-stream*)
-  (write-line (cdr cell) *right-stream*))
+  (when (cdr cell)
+      (write-line (cdr cell) *right-stream*)))
 
 (defun flush-output-streams-to-file (output-stream)
   (write-line (get-output-stream-string *left-stream*) output-stream)
