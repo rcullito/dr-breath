@@ -1,16 +1,15 @@
 (load "helpers.lisp")
 
-(defparameter *delimeter* "      ")
+(defparameter *delimeter* "   ")
 (defparameter *left-stream* (make-string-output-stream))
 (defparameter *right-stream* (make-string-output-stream))
 
-;; columns
-
 (defun left-column (txt delim)
-  (let ((end-of-left-column (search delim txt)))
-    ;; we can't do a when here because there will be some valid
-    ;; lines in the corpus that will not have a gap
-    (subseq txt 0 end-of-left-column)))
+  (unless (false-start-p txt delim)
+    (let ((end-of-left-column (search delim txt)))
+      ;; we can't do a when here because there will be some valid
+      ;; lines in the corpus that will not have a gap
+      (subseq txt 0 end-of-left-column))))
 
 (defun right-column (txt delim)
   (let ((adjustment (length delim))
