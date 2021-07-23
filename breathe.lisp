@@ -28,10 +28,9 @@
         (right-column text *delimeter*)))
 
 (defun process-prose-line (text)
-  (if (or (false-start-p text *delimeter*) (< (length text) 65))
-      (cons (subseq text 0 (min (length text) 65)) nil)
-      (cons (left-column text *delimeter*)
-            (right-column text *delimeter*))))
+  (cond
+    ((short-line-p text) (cons (subseq text 0 (min (length text) 65)) nil))
+    (t (cons (left-column text *delimeter*) (right-column text *delimeter*)))))
 
 ;; io
 
@@ -41,17 +40,20 @@
   (when (cdr cell)
       (write-line (cdr cell) *right-stream*)))
 
-(defun flush-output-streams-to-file (output-stream)
-  (write-line (get-output-stream-string *left-stream*) output-stream)
-  (write-line (get-output-stream-string *right-stream*) output-stream))
+(defun flush-output-streams-to-file (text output-stream)
+  (when (funcall even-page-num-p text)
+      (write-line (get-output-stream-string *left-stream*) output-stream))
+  (when (funcall odd-page-num-p text)
+    (write-line (get-output-stream-string *right-stream*) output-stream)))
 
 
 ;; workhorses
 
 (defun line->text-streams (text output-stream)
   (cond
-    ((zerop (length text)) (flush-output-streams-to-file output-stream))
-    ((line-num-p text) (strings->text-streams (process-page-number text)))
+    ((zerop (length text)) nil)
+    ((line-num-p text) (progn (strings->text-streams (process-page-number text))
+                              (flush-output-streams-to-file text output-stream)))
     ((page-heading-p text) (strings->text-streams (process-page-heading text)))
     (t (strings->text-streams (process-prose-line text)))))
 
@@ -66,4 +68,4 @@
 
 
 ;; TODO if page number is even, flush left, if odd, flush right. that is the key to it all!
-;; (transcribe "Chapter5.txt" "built.txt")
+(transcribe "Chapter5.txt" "built.txt")
