@@ -6,6 +6,8 @@
 (defparameter *example-prose-line-1* "controlled at will and can effectively influence the passage of    undue stress on any part of the respiratory apparatus are sus-")
 
 (defparameter *example-prose-line-2* "breathmg coordination.")
+(defparameter *example-prose-line-3* " total inefficiency, it creates the illusion of immediately supply-")
+
 
 (defun page-heading-test ()
   (equal (process-page-heading *example-page-heading*)
@@ -31,9 +33,9 @@
   (every (lambda (x) (funcall x)) tests))
 
 ;; (all-tests-pass
-;;  '(page-heading-test
-;;    page-number-test-1
-;;    page-number-test-2
-;;    prose-line-test-1
-;;    prose-line-test-2))
+;; '(page-heading-test
+;;   page-number-test-1
+;;   page-number-test-2
+;;   prose-line-test-1
+;;   prose-line-test-2))
 

@@ -1,36 +1,35 @@
 (load "helpers.lisp")
 
-(defparameter *delimeter* "   ")
+(defparameter *column-break* 67)
 (defparameter *left-stream* (make-string-output-stream))
 (defparameter *right-stream* (make-string-output-stream))
 
-(defun left-column (txt delim)
-  (let ((end-of-left-column (search delim txt)))
-    ;; we can't do a when here because there will be some valid
-    ;; lines in the corpus that will not have a gap
-    (subseq txt 0 end-of-left-column)))
+(defun left-column (txt)
+  (subseq txt 0 (min (length txt) *column-break*)))
+;; left is 67 + the first alphanumeric character
 
-(defun right-column (txt delim)
-  (let ((adjustment (length delim))
-        (backwards-search-position (search delim txt :from-end :backward)))
-    (when backwards-search-position
-      (let ((beginning-of-right-column (+ backwards-search-position adjustment)))
-        (subseq txt beginning-of-right-column)))))
+
+(defun right-column (txt)
+  (when (> (length txt) *column-break*)
+    (subseq txt *column-break*)))
 
 ;; processors
 
+;; todo make a macro that defines a function
+;; that trims space and cons's 2 things
+
+;; TODO macro to make >67 a predicate
+
 (defun process-page-heading (text)
-  (cons "Dr. Breath" (right-column text *delimeter*)))
+  (cons "Dr. Breath" (trim-space (right-column text))))
 
 (defun process-page-number (text)
   (cons (when (funcall long-line-p text)
-          (string-trim '(#\Space) (first-half text)))
-        (right-column text *delimeter*)))
+          (trim-space (first-half text)))
+        (trim-space (right-column text))))
 
 (defun process-prose-line (text)
-  (cond
-    ((short-line-p text) (cons (subseq text 0 (min (length text) 65)) nil))
-    (t (cons (left-column text *delimeter*) (right-column text *delimeter*)))))
+  (cons (trim-space (left-column text)) (trim-space (right-column text))))
 
 ;; io
 
@@ -68,4 +67,5 @@
 
 
 ;; TODO if page number is even, flush left, if odd, flush right. that is the key to it all!
-(transcribe "Chapter5.txt" "built.txt")
+;; (transcribe "Chapter5.txt" "built.txt")
+

@@ -4,7 +4,8 @@
   (search "  Dr. Breath  " txt))
 
 (defun trim-space (text)
-  (string-trim '(#\Space) text))
+  (when text
+    (string-trim '(#\Space) text)))
 
 (defun line-num-p (text)
   (every #'digit-char-p (trim-space text)))
