@@ -6,8 +6,6 @@
 
 (defun left-column (txt)
   (subseq txt 0 (min (length txt) *column-break*)))
-;; left is 67 + the first alphanumeric character
-
 
 (defun right-column (txt)
   (when (> (length txt) *column-break*)
