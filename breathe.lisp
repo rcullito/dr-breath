@@ -9,9 +9,11 @@
          (right-part (safe-subseq txt 67)))
     (values left-part right-part)))
 
-(defun strings->text-streams (left right)
-  (write-line left *left-stream*)
-  (write-line right *right-stream*))
+(defun strings->text-streams (left &optional right)
+  (when left
+    (write-line left *left-stream*))
+  (when right
+    (write-line right *right-stream*)))
 
 (defun flush-streams (text file-stream)
   (empty-left-page text file-stream)
@@ -27,4 +29,14 @@
     (line->text-streams current-line output-stream)))
 
 
-;; (transcribe "Chapter5.txt" "built.txt")
+(transcribe "Chapter5.txt" "built.txt")
+
+
+
+
+(get-output-stream-string *left-stream*)
+                                        
+
+(with-open-file (output-stream "built1.txt" :direction :output :if-exists :supersede)
+  (strings->text-streams (process-line " SEARCH         FOR     AN    ANSWER"))
+  (empty-left-page "       61" output-stream))
