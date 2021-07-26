@@ -9,18 +9,16 @@
          (right-part (safe-subseq txt 67)))
     (values left-part right-part)))
 
-(defun strings->text-streams (left &optional right)
-  (when left
-    (write-line left *left-stream*))
-  (when right
-    (write-line right *right-stream*)))
-
 (defun flush-streams (text file-stream)
   (empty-left-page text file-stream)
   (empty-right-page text file-stream))
 
 (defun line->text-streams (text output-stream)
-  (strings->text-streams (process-line text))
+  (multiple-value-bind (left right) (process-line text)
+    (when left
+      (write-line left *left-stream*))
+    (when right
+      (write-line right *right-stream*)))
   (when (line-num-p text)
     (flush-streams text output-stream)))
 
@@ -29,14 +27,14 @@
     (line->text-streams current-line output-stream)))
 
 
-(transcribe "Chapter5.txt" "built.txt")
+;; if you go through and prune the page numbers to
+;; consistently be left, even
+;;                 right, odd
+;; then this works like a charm, wahoo!
+
+;; (transcribe "Chapter5.txt" "built.txt")
 
 
 
 
-(get-output-stream-string *left-stream*)
-                                        
 
-(with-open-file (output-stream "built1.txt" :direction :output :if-exists :supersede)
-  (strings->text-streams (process-line " SEARCH         FOR     AN    ANSWER"))
-  (empty-left-page "       61" output-stream))

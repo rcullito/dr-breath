@@ -9,8 +9,9 @@
 
 (defun make-page-predicate (odd-or-even)
   (lambda (text)
-    (let ((page-integer (parse-integer (trim-space text))))
-      (and (funcall odd-or-even page-integer) (> page-integer 10)))))
+    (when (> (length (trim-space text)) 0)
+      (let ((page-integer (parse-integer (trim-space text))))
+        (and (funcall odd-or-even page-integer) (> page-integer 10))))))
 
 (defvar odd-page-num-p (make-page-predicate #'oddp))
 (defvar even-page-num-p (make-page-predicate #'evenp))
@@ -57,5 +58,5 @@
        (write-line (get-output-stream-string ,page-stream)
                    ,g!file-stream))))
 
-(empty-page left odd-page-num-p *left-stream*)
-(empty-page right even-page-num-p *right-stream*)
+(empty-page left even-page-num-p *left-stream*)
+(empty-page right odd-page-num-p *right-stream*)
