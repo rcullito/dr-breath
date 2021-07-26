@@ -1,3 +1,5 @@
+(load "prerequisites.lisp")
+
 (defun trim-space (text)
   (when text
     (string-trim '(#\Space) text)))
@@ -21,14 +23,6 @@
       until (eq current-line 'eof)
       do ,@body))))
 
-(defun mkstr (&rest args)
-  (with-output-to-string (s)
-    (dolist (a args)
-      (princ a s))))
-
-(defun symb (&rest args)
-  ;; values returns the objects as multiple values
-  (values (intern (apply #'mkstr args))))
 
 (defvar *small-numbers*
   (loop for n from 2 to 99
@@ -55,3 +49,13 @@
                         (t (subseq txt start)))))
     (trim-space handled-text)))
 
+
+
+(defmacro! empty-page (page-type pred page-stream)
+  `(defun ,(symb 'empty- page-type '-page) (,g!text ,g!file-stream)
+     (when (funcall ,pred ,g!text)
+       (write-line (get-output-stream-string ,page-stream)
+                   ,g!file-stream))))
+
+(empty-page left even-page-num-p *left-stream*)
+(empty-page right odd-page-num-p *right-stream*)

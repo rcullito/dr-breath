@@ -1,3 +1,4 @@
+
 (load "helpers.lisp")
 
 (defparameter *left-stream* (make-string-output-stream))
@@ -8,21 +9,22 @@
          (right-part (safe-subseq txt 67)))
     (values left-part right-part)))
 
-(defun strings->text-streams (cell)
-  (write-line (car cell) *left-stream*)
-  (write-line (cdr cell) *right-stream*))
+(defun strings->text-streams (left right)
+  (write-line left *left-stream*)
+  (write-line right *right-stream*))
 
-(defun flush-output-streams-to-file (text output-stream)
-  (when (funcall even-page-num-p text)
-      (write-line (get-output-stream-string *left-stream*) output-stream))
-  (when (funcall odd-page-num-p text)
-    (write-line (get-output-stream-string *right-stream*) output-stream)))
+(defun flush-streams (text file-stream)
+  (empty-left-page text file-stream)
+  (empty-right-page text file-stream))
 
 (defun line->text-streams (text output-stream)
-  (strings->text-streams (process-prose-line text)))
+  (strings->text-streams (process-line text))
+  (when (line-num-p text)
+    (flush-streams text output-stream)))
 
 (defun transcribe (input-file output-file)
   (file->file input-file output-file
     (line->text-streams current-line output-stream)))
 
 
+;; (transcribe "Chapter5.txt" "built.txt")
