@@ -1,0 +1,15 @@
+Interpreted Timing
+
+Real time: 2.0E-5 sec.
+Run time: 1.8E-5 sec.
+Space: 40 Bytes
+
+"carrat"
+
+Compiled Timing
+
+Real time: 1.7E-5 sec.
+Run time: 1.4E-5 sec.
+Space: 40 Bytes
+
+"carrat"
