@@ -27,14 +27,14 @@
 
 
 (defmacro! empty-page (page-type base-pred page-stream)
-  (let ((page-pred (make-page-predicate base-pred)))
-    `(defun ,(symb 'empty- page-type '-page) (,g!text ,g!file-stream)
-      (when (funcall ,page-pred ,g!text)
+  `(let ((,g!page-pred ,(make-page-predicate base-pred)))
+    (defun ,(symb 'empty- page-type '-page) (,g!text ,g!file-stream)
+      (when (funcall ,g!page-pred ,g!text)
         (write-line (get-output-stream-string ,page-stream)
                     ,g!file-stream)))))
 
-(empty-page left #'evenp *left-stream*)
-(empty-page right #'oddp *right-stream*)
+(empty-page left evenp *left-stream*)
+(empty-page right oddp *right-stream*)
 
 
 (defmacro file->file (input-file output-file &body body)
