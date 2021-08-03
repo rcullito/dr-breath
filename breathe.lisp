@@ -5,9 +5,7 @@
 (defparameter *right-stream* (make-string-output-stream))
 
 (defun process-line (txt)
-  (let* ((left-part (safe-subseq txt 0 67))
-         (right-part (safe-subseq txt 67)))
-    (values left-part right-part)))
+  (split-into-columns txt 67))
 
 (defun flush-streams (text file-stream)
   (empty-left-page text file-stream)
