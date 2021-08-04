@@ -15,9 +15,10 @@
                         (t (subseq txt start)))))
     (trim-space handled-text)))
 
-(defun split-into-columns (txt threshold)
-  (values (safe-subseq txt 0 threshold)
-          (safe-subseq txt threshold)))
+(let ((threshold 67))
+  (defun split-into-columns (txt)
+   (values (safe-subseq txt 0 threshold)
+           (safe-subseq txt threshold))))
 
 (defun make-page-predicate (odd-or-even)
   (lambda (text)

@@ -4,15 +4,12 @@
 (defparameter *left-stream* (make-string-output-stream))
 (defparameter *right-stream* (make-string-output-stream))
 
-(defun process-line (txt)
-  (split-into-columns txt 67))
-
 (defun flush-streams (text file-stream)
   (empty-left-page text file-stream)
   (empty-right-page text file-stream))
 
-(defun line->text-streams (text output-stream)
-  (multiple-value-bind (left right) (process-line text)
+(defun process-line (text output-stream)
+  (multiple-value-bind (left right) (split-into-columns text)
     (when left
       (write-line left *left-stream*))
     (when right
@@ -22,7 +19,7 @@
 
 (defun transcribe (input-file output-file)
   (file->file input-file output-file
-    (line->text-streams current-line output-stream)))
+    (process-line current-line output-stream)))
 
 
 ;; if you go through and prune the page numbers to
