@@ -45,3 +45,14 @@
       for current-line = (read-line input-stream nil 'eof) 
       until (eq current-line 'eof)
       do ,@body))))
+
+
+(defmacro mac (expr)
+  `(macroexpand-1 ',expr))
+
+(defmacro when-multi ((binding1 binding2) binding-form &body body)
+  `(multiple-value-bind (,binding1 ,binding2) ,binding-form
+     (when ,binding1
+       ,(first body))
+     (when ,binding2
+       ,(second body))))
