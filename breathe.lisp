@@ -9,11 +9,9 @@
   (empty-right-page text file-stream))
 
 (defun process-line (text output-stream)
-  (multiple-value-bind (left right) (split-into-columns text)
-    (when left
-      (write-line left *left-stream*))
-    (when right
-      (write-line right *right-stream*)))
+  (when-multi (left right) (split-into-columns text)
+    (write-line left *left-stream*)
+    (write-line right *right-stream*))
   (when (line-num-p text)
     (flush-streams text output-stream)))
 
