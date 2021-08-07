@@ -38,13 +38,18 @@
 (empty-page right oddp *right-stream*)
 
 
+;; On Lisp, by Paul Graham. pg 191
+(defmacro awhile (expr &body body)
+  `(do ((it ,expr ,expr))
+       ((not it))
+     ,@body))
+
+
 (defmacro file->file (input-file output-file &body body)
   `(with-open-file (output-stream ,output-file :direction :output :if-exists :supersede)
-    (with-open-file (input-stream ,input-file :direction :input)
-      (loop
-      for current-line = (read-line input-stream nil 'eof) 
-      until (eq current-line 'eof)
-      do ,@body))))
+     (with-open-file (input-stream ,input-file :direction :input)
+       (awhile (read-line input-stream nil)
+         ,@body))))
 
 
 (defmacro mac (expr)
@@ -56,3 +61,8 @@
        ,(first body))
      (when ,binding2
        ,(second body))))
+
+
+;; (with-open-file (input-stream "test.txt" :direction :input)
+;;   (awhile (read-line input-stream nil)
+;;    (print it)))

@@ -17,7 +17,7 @@
 
 (defun transcribe (input-file output-file)
   (file->file input-file output-file
-    (process-line current-line output-stream)))
+    (process-line it output-stream)))
 
 
 ;; if you go through and prune the page numbers to
