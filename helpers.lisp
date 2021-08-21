@@ -62,6 +62,16 @@
      (when ,binding2
        ,(second body))))
 
+(defmacro flush-text-streams-to-file ()
+  `(progn
+    (empty-left-page text file-stream)
+    (empty-right-page text file-stream)))
+
+(defmacro write-lines-to-text-streams ()
+  `(when-multi (left right) (split-into-columns text)
+    (write-line left *left-stream*)
+    (write-line right *right-stream*)))
+
 
 ;; (with-open-file (input-stream "test.txt" :direction :input)
 ;;   (awhile (read-line input-stream nil)
