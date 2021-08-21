@@ -4,16 +4,20 @@
 (defparameter *left-stream* (make-string-output-stream))
 (defparameter *right-stream* (make-string-output-stream))
 
-(defun flush-streams (text file-stream)
-  (empty-left-page text file-stream)
-  (empty-right-page text file-stream))
+(defmacro flush-text-streams-to-file ()
+  `(progn
+    (empty-left-page text file-stream)
+    (empty-right-page text file-stream)))
 
-(defun process-line (text output-stream)
-  (when-multi (left right) (split-into-columns text)
+(defmacro write-lines-to-text-streams ()
+  `(when-multi (left right) (split-into-columns text)
     (write-line left *left-stream*)
-    (write-line right *right-stream*))
+    (write-line right *right-stream*)))
+
+(defun process-line (text file-stream)
+  (write-lines-to-text-streams)
   (when (line-num-p text)
-    (flush-streams text output-stream)))
+    (flush-text-streams-to-file)))
 
 (defun transcribe (input-file output-file)
   (file->file input-file output-file
